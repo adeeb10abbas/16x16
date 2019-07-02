@@ -15,7 +15,7 @@ This command line interface allows you to control all the 16 switches and all th
 
 
 2. Go into the Github repo and run the following command to see the list of the commands and the inputs expected with each one.
-    python cli-controller.py --help
+    `python cli-controller.py --help`
 
 or for Linux/mac
 
