@@ -5,8 +5,8 @@ This command line interface allows you to control all the 16 switches and all th
 # System Requirements→
     Python 3.xx
     Python Packages →
-        [Click](https://pypi.org/project/click/) 
-        [Requests](https://pypi.org/project/requests/)
+       1. [Click](https://pypi.org/project/click/) 
+       2. [Requests](https://pypi.org/project/requests/)
 
 
 # Steps →
