@@ -11,7 +11,7 @@ This command line interface allows you to control all the 16 switches and all th
 
 # Steps →
 1. Clone the Github repo. 
-    git clone https://github.com/adeeb10abbas/16x16.git
+    `git clone https://github.com/adeeb10abbas/16x16.git`
 
 
 2. Go into the Github repo and run the following command to see the list of the commands and the inputs expected with each one.
