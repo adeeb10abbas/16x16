@@ -13,11 +13,11 @@ def main(switch, position, reset, view):
     data = {}
     data["position"] = int(position)
     json_data = json.dumps(data)
-    # print(json_data)
+    
 
     response = requests.post('http://10.248.102.11//v1/switch/'+str(switch), headers=headers, data=str(json_data))
     click.echo(response.text)
-    #print(reset)
+    
 
     if reset:
         response = requests.post("http://10.248.102.11//v1/switches/default-positions ",headers = headers, data= str(json_data))
