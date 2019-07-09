@@ -1,32 +1,51 @@
-# 16x16 grid command line interface
+# gridcli
+DWSL Grid Testbed client
 
-This command line interface allows you to control all the 16 switches and all the positions within those switches.
+Files taken from:
+dwsl@dwsl-maas:/.virtualenvs/gridclienv/lib/python3.5/site-packages/gridcli/
 
-# System Requirements→
-    Python 3.xx
-    Python Packages →
-       1. [Click](https://pypi.org/project/click/) 
-       2. [Requests](https://pypi.org/project/requests/)
+Development requires virtualenv and virtualenvwrapper using directions similar to:
+https://www.sneaku.com/2016/11/17/my-python-virtual-env-setup-instructions/
 
+General process to build:
+```
+mkvirtualenv gridcli
+workon gridcli
+pip install -r requirements.txt
+```
+Then put the python code from this repo into:
+~/.virtualenvs/gridcli/lib/python3.5/site-packages/gridcli
 
-# Steps →
-1. Clone the Github repo. 
-    `git clone https://github.com/adeeb10abbas/16x16.git`
+To run gridcli in this development system go to:
+~/.virtualenvs/gridcli/bin
 
+... and create something akin to the following file (gridcli - chmod to make rx runnable for all):
 
-2. Go into the Github repo and run the following command to see the list of the commands and the inputs expected with each one.
-    `python cli-controller.py --help`
+```
+#!/userhomes/krd26/.virtualenvs/gridcli2/bin/python3
+ 
+# -*- coding: utf-8 -*-
+import re
+import sys
+import os # Added by Kapil to suppress warnings when creating containers on grid machines (requires pylxd 2.2.10)
 
-or for Linux/mac
+os.environ['PYLXD_WARNINGS']="none" # Added by Kapil to suppress warnings when creating containers on grid machines (requires pylxd 2.2.10)
 
-    python3 cli-controller.py --help
+from gridcli.gridcli import main
 
-**Examples→**
+if __name__ == '__main__':
+	sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])
+	sys.exit(main())
+```
 
+To run:
+```
+python3 gridcli
+```
+... or run ./gridcli directly from the command line.  Note that if you do this, the first line of the gridcli file must specify the absolute path to the python3 interpreter in the virtualenvironment (e.g., #!/userhomes/krd26/.virtualenvs/gridcli2/bin/python3)
 
-![](https://paper-attachments.dropbox.com/s_79B124A28AFC511CB034C5169E7358F6244F4F01962B4744DCB7EC937A24945E_1562093807163_image.png)
-
-![](https://paper-attachments.dropbox.com/s_79B124A28AFC511CB034C5169E7358F6244F4F01962B4744DCB7EC937A24945E_1562093945015_image.png)
-
-
+To stop virtual environment:
+```
+deactivate
+```
 
