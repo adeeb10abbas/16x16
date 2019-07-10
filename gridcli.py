@@ -25,15 +25,11 @@ def reset_to_defaultA():
     adata["attenuation"] = 50.0
     
     json_adata = json.dumps(adata)
-    
-    #response = requests.post("http://10.248.102.11//v2/defaults/switches ",headers = headers, data=str(json_data))
-    
-    
     for i in range(1,17):
-        #response = requests.post('http://10.248.102.11/v2/switches/'+str(i), headers=headers, data=str(json_data))
+        
         response = requests.post("http://10.248.102.11//v2/attenuators/"+str(i),headers = headers, data=json_adata)
-        #response = requests.get("http://10.248.102.11//v2/attenuators/"+str(i))
-        #print(response.text)
+        
+        
     print("Attenuation(default value: 50.0) values has been reset!")
 def reset_to_defaultS():
     data ={}
