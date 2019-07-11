@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#!/opt/python/3.7/bin/python
+#!/usr/bin/env python3
 """ CLI for 16x16 matrix """
 import argparse
 import urllib3
