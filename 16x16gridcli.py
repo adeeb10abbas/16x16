@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
 """ CLI for 16x16 matrix """
-
 import argparse
-from gridcli import *
 import urllib3
 import requests
 import json
+import pickle
 headers = {
     'Content-Type': 'application/json',
     }
@@ -19,18 +18,14 @@ def set_position(position, switch):
     json_data = json.dumps(data)
     response = requests.post('http://10.248.102.11/v2/switches/'+str(switch), headers=headers, data=str(json_data))
 
-def reset_to_defaultA():
+def reset_to_defaultA(x):
     adata = {}
-    
-    adata["attenuation"] = 50.0
-    
+    adata["attenuation"] = float(x)
     json_adata = json.dumps(adata)
+    #print(json_adata)
     for i in range(1,17):
-        
         response = requests.post("http://10.248.102.11//v2/attenuators/"+str(i),headers = headers, data=json_adata)
-        
-        
-    print("Attenuation(default value: 50.0) values has been reset!")
+    print("Attenuation(default value:",x,") values has been reset!")
 def reset_to_defaultS():
     data ={}
     data["position"] = int(1)
@@ -38,15 +33,7 @@ def reset_to_defaultS():
 
     for i in range(1,17):
         response = requests.post('http://10.248.102.11/v2/switches/'+str(i), headers=headers, data=str(json_data))
-        
-        #print(response.text)
     print("The switches and the positions have been reset!")
-
-
-
-
-
-
 
 def view(view):
     print("<-------------- Status------------>")
@@ -66,15 +53,8 @@ def attenuation(attenuation, switch, position):
     adata["attenuation"] = float(attenuation)
     json_adata = json.dumps(adata)
     response = requests.post("http://10.248.102.11//v2/attenuators/"+str(switch),headers = headers, data=json_adata)
-    #print(response.text)
     print("Switch", switch,"at position", position, "has an attenuation of", attenuation) 
     print()
-    # for i in range(1,17):
-    #     response = requests.get("http://10.248.102.11//v2/attenuators/"+str(i))
-    #     print(response.text.split(' '))
-
-
-
 def get_args():
     """ Get args from command line """
 
@@ -82,7 +62,7 @@ def get_args():
     parser.add_argument('-p', '--position',
                         dest='position',
                         default=int(1),
-                        #action='store_true',
+                        
                         help='Set the postion(1-16)')
     parser.add_argument('-s', '--switch',
                         dest='switch',
@@ -92,12 +72,17 @@ def get_args():
                         dest='resetA',
                         default=False, 
                         action='store_true',
-                        help=' Reset all the attenuations to 50.0')
+                        help=' Reset all the attenuations to the default value')
     parser.add_argument( "-rS",'--resetS',
                         dest='resetS',
                         default=False, 
                         action='store_true',
                         help=' Reset all the switches and positions')
+    parser.add_argument( "-rAll",'--resetAll',
+                        dest='resetAll',
+                        default=False, 
+                        action='store_true',
+                        help=' Reset all the switches and positions and attenuations')                      
     parser.add_argument('-v' ,'--view',
                         dest='view',
                         default=False,
@@ -108,13 +93,18 @@ def get_args():
                         dest='attenuation',
                         #action='store_const',
                         help='Set an attenuation(1-92)')
+    parser.add_argument('-cda','--changedefaultattenuation',
+                        default = float(0),
+                        dest= 'SetAttDef',
+                        
+                        help=argparse.SUPPRESS
+                        )
     
     args = parser.parse_args()
 
     return(args)
-
-
 def main():
+    listy=[50.0]
     args = get_args()
     if args.view:
         view(args.view)
@@ -122,13 +112,26 @@ def main():
         set_position(args.position, args.switch)
     if args.position:
         set_position(args.position, args.switch)
+    if args.resetAll:
+        with open ('def_attenuation_value', 'rb') as fp:
+            listy = pickle.load(fp)
+            reset_to_defaultA(float(listy[len(listy)-1]))
+        reset_to_defaultS()
+
+    if float(args.SetAttDef)!=0:
+        listy.append(float(args.SetAttDef))
+        with open('def_attenuation_value', 'wb') as fp:
+            pickle.dump(listy, fp)
+        reset_to_defaultA(args.SetAttDef)
     if args.resetA:
-        reset_to_defaultA()
+        with open ('def_attenuation_value', 'rb') as fp:
+            listy = pickle.load(fp)
+            reset_to_defaultA(float(listy[len(listy)-1]))
+        print(listy[len(listy)-1])
     if args.resetS:
         reset_to_defaultS()
     if float(args.attenuation)!=0:
         attenuation(args.attenuation, args.switch, args.position)
-
 if __name__ == "__main__":
     main()
     
